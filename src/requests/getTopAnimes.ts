@@ -1,3 +1,4 @@
+export default `
 {
   Page(perPage:50){
     media (sort:POPULARITY_DESC, popularity_greater: 4000){      
@@ -17,3 +18,4 @@
   	}	
   }
 }
+`;
