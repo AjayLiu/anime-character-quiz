@@ -1,13 +1,7 @@
-# gatsby-starter-typescript
-The [default Gatsby starter](https://github.com/gatsbyjs/gatsby-starter-default) converted to [TypeScript](https://www.typescriptlang.org/).
+# anime-character-quiz 
 
-For an overview of the project structure please refer to the [Gatsby documentation - Building with Components](https://www.gatsbyjs.org/docs/building-with-components/)
+Built using Gatsby, Anilist GraphQL, Typescript
 
-Install this starter (assuming Gatsby is installed) by running from your CLI:
-```
-gatsby new gatsby-starter-typescript https://github.com/haysclark/gatsby-starter-typescript
-```
+[Visit now](https://anime-character-quiz.netlify.app)
 
-## Deploy
-
-[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/haysclark/gatsby-starter-typescript)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/adb940b7-d707-4d5e-82c3-0ac7dd36229d/deploy-status)](https://app.netlify.com/sites/anime-character-quiz/deploys)

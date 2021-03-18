@@ -1,43 +1,44 @@
-import * as React from 'react'
-import Link from 'gatsby-link'
+import React, { useEffect } from "react";
 
-// Please note that you can use https://github.com/dotansimha/graphql-code-generator
-// to generate all types from graphQL schema
-interface IndexPageProps {
-  data: {
-    site: {
-      siteMetadata: {
-        title: string
+const Home: React.FC = () => {
+  useEffect(() => {
+    const fetchAnimes = async () => {
+      try {
+        const response = await fetch("https://graphql.anilist.co/", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            query: `
+          {
+              Page(perPage:50){
+              media (sort:POPULARITY_DESC, popularity_greater: 4000){      
+                title {
+                  romaji
+                }
+                characters(sort:FAVOURITES_DESC, perPage: 1){
+                  nodes{
+                    name {
+                      full
+                    }
+                    image{
+                      medium
+                    }
+                  }
+                }
+              }	
+            }
+          }`,
+          }),
+        });
+        const { data } = await response.json();
+        console.log(data);
+      } catch (error) {
+        console.error(error);
       }
-    }
-  }
-}
+    };
+    fetchAnimes();
+  }, []);
+  return <div>hi</div>;
+};
 
-export default class extends React.Component<IndexPageProps, {}> {
-  constructor(props: IndexPageProps, context: any) {
-    super(props, context)
-  }
-  public render() {
-    return (
-      <div>
-        <h1>Hi people</h1>
-        <p>
-          Welcome to your new{' '}
-          <strong>{this.props.data.site.siteMetadata.title}</strong> site.
-        </p>
-        <p>Now go build something great.</p>
-        <Link to="/page-2/">Go to page 2</Link>
-      </div>
-    )
-  }
-}
-
-export const pageQuery = graphql`
-  query IndexQuery {
-    site {
-      siteMetadata {
-        title
-      }
-    }
-  }
-`
+export default Home;
