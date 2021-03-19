@@ -4967,6 +4967,13 @@ gatsby-plugin-sass@^4.1.0:
     resolve-url-loader "^3.1.2"
     sass-loader "^10.1.1"
 
+gatsby-plugin-tsconfig-paths@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/gatsby-plugin-tsconfig-paths/-/gatsby-plugin-tsconfig-paths-1.0.2.tgz#38635b78ecc3ab7776e7aa44bb4f7c94353de5ff"
+  integrity sha512-aa1vTd89BZGSHEavW3W+5UNI+GzbnXBq2K2mpbg8jG/GRU77nwzeoVc4hVVmDuwIzY6FyfaeW1KbyvrR02w2SQ==
+  dependencies:
+    tsconfig-paths-webpack-plugin "^3.2.0"
+
 gatsby-plugin-typescript@^3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/gatsby-plugin-typescript/-/gatsby-plugin-typescript-3.1.0.tgz#dafb86c481f8bad84ad761e08f7d6ae83a7c73ba"
@@ -9414,6 +9421,11 @@ shell-quote@1.7.2:
   resolved "https://registry.yarnpkg.com/shell-quote/-/shell-quote-1.7.2.tgz#67a7d02c76c9da24f99d20808fcaded0e0e04be2"
   integrity sha512-mRz/m/JVscCrkMyPqHc/bczi3OQHkLTqXHEFu0zDhK/qfv3UcOA4SVmRCLmos4bhjr9ekVQubj/R7waKapmiQg==
 
+shuffle-array@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/shuffle-array/-/shuffle-array-1.0.1.tgz#c4ff3cfe74d16f93730592301b25e6577b12898b"
+  integrity sha1-xP88/nTRb5NzBZIwGyXmV3sSiYs=
+
 side-channel@^1.0.4:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/side-channel/-/side-channel-1.0.4.tgz#efce5c8fdc104ee751b25c58d4290011fa5ea2cf"
@@ -10214,6 +10226,15 @@ ts-pnp@^1.1.6:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/ts-pnp/-/ts-pnp-1.2.0.tgz#a500ad084b0798f1c3071af391e65912c86bca92"
   integrity sha512-csd+vJOb/gkzvcCHgTGSChYpy5f1/XKNsmvBGO4JXS+z1v2HobugDz4s1IeFXM3wZB44uczs+eazB5Q/ccdhQw==
+
+tsconfig-paths-webpack-plugin@^3.2.0:
+  version "3.5.1"
+  resolved "https://registry.yarnpkg.com/tsconfig-paths-webpack-plugin/-/tsconfig-paths-webpack-plugin-3.5.1.tgz#e4dbf492a20dca9caab60086ddacb703afc2b726"
+  integrity sha512-n5CMlUUj+N5pjBhBACLq4jdr9cPTitySCjIosoQm0zwK99gmrcTGAfY9CwxRFT9+9OleNWXPRUcxsKP4AYExxQ==
+  dependencies:
+    chalk "^4.1.0"
+    enhanced-resolve "^5.7.0"
+    tsconfig-paths "^3.9.0"
 
 tsconfig-paths@^3.9.0:
   version "3.9.0"
