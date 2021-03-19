@@ -37,7 +37,6 @@ const Game: React.FC = () => {
       const randomAnimeIDs = randomAnimes.map((v) => v.id);
 
       //if duplicate
-<<<<<<< HEAD
       //check for duplicates among wrong choices
       const uniqueAnimes = new Set(randomAnimeIDs);
       if (
@@ -61,17 +60,6 @@ const Game: React.FC = () => {
         });
         if (!foundAmbiguous) break;
       }
-=======
-      let foundDupe = false;
-      randomAnimes.forEach((val) => {
-        if (val.id == correctAnime.id) {
-          console.error(randomAnimes);
-          randomAnimes = [];
-          foundDupe = true;
-        }
-      });
-      if (!foundDupe) break;
->>>>>>> b7671e636786f991fc082058b413068cab3ae57d
     }
 
     //insert the correct answer
