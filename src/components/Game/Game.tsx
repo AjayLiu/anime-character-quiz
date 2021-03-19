@@ -4,7 +4,7 @@ import shuffle from "shuffle-array";
 const Game: React.FC = () => {
   const PAGES_TO_GET = 5;
   const [randList, setRandList] = useState<Array<number>>();
-  const [animeIndex, setAnimeIndex] = useState(0);
+  const [playerIndex, setPlayerIndex] = useState(0);
   const [characterIndex, setCharacterIndex] = useState<number>(
     Math.floor(Math.random() * 5)
   );
@@ -16,30 +16,44 @@ const Game: React.FC = () => {
   const shuffleRandList = () => {
     //make an array filled from 0 to pagesToGet * 50
     let tempArr = Array.from(Array(PAGES_TO_GET * 50).keys());
-    setRandList(shuffle(tempArr));
+    shuffle(tempArr);
+    setRandList(tempArr);
   };
+
   const randomizeChoices = () => {
-    let randomIndexes = [];
+    let randomAnimes: Array<AnimeItem> = [];
     const max = PAGES_TO_GET * 50 - 3;
 
+    const correctAnime = animeList[randList[playerIndex]];
     //keep randomizing to make sure the real answer isnt in the wrong choices
-    do {
+    let randomIndexes = [];
+    while (true) {
       const randIndex = Math.floor(Math.random() * max);
       randomIndexes = randList.slice(randIndex, randIndex + 3);
-    } while (randomIndexes.includes(randList[animeIndex]));
+      randomIndexes.forEach((val) => {
+        randomAnimes.push(animeList[randList[val]]);
+      });
 
-    const choices = randomIndexes.map((val) => {
-      return animeList[val];
-    });
+      //if duplicate
+      if (randomAnimes.includes(correctAnime)) {
+        randomAnimes = [];
+      } else {
+        break;
+      }
+    }
 
     //insert the correct answer
-    const correctAnswerIndex = Math.floor(Math.random() * 4);
-    choices.splice(correctAnswerIndex, 0, animeList[randList[animeIndex]]);
-    setDisplayedChoices(choices);
-    setCorrectChoiceIndex(correctAnswerIndex);
+    const insertSpot = Math.floor(Math.random() * 4);
+    randomAnimes.splice(insertSpot, 0, correctAnime);
+    console.log(randomAnimes);
+
+    setDisplayedChoices(randomAnimes);
+    setCorrectChoiceIndex(insertSpot);
   };
+
   const animeList = useGetTopAnimes(PAGES_TO_GET);
   useEffect(() => {
+    //done getting all animes
     if (animeList.length == PAGES_TO_GET * 50) {
       shuffleRandList();
       setIsLoading(false);
@@ -47,17 +61,13 @@ const Game: React.FC = () => {
   }, [animeList]);
 
   useEffect(() => {
-    if (randList != undefined) {
+    if (!isLoading) {
       randomizeChoices();
     }
-  }, [randList, animeIndex]);
-
-  useEffect(() => {
-    console.log(displayedChoices);
-  }, [displayedChoices]);
+  }, [isLoading, playerIndex]);
 
   const nextCharacter = () => {
-    setAnimeIndex(animeIndex + 1);
+    setPlayerIndex(playerIndex + 1);
     setCharacterIndex(Math.floor(Math.random() * 5));
   };
 
@@ -69,13 +79,18 @@ const Game: React.FC = () => {
         <>
           <img
             src={
-              animeList[randList[animeIndex]].characters[characterIndex].image
+              animeList[randList[playerIndex]].characters[characterIndex].image
             }
           ></img>
           <h2>This character is from...</h2>
           {displayedChoices &&
             displayedChoices.map((item, idx) => {
-              return <div key={idx}>{item.title}</div>;
+              return (
+                <div key={idx}>
+                  <div>{item.title}</div>
+                  <div>{item.id}</div>
+                </div>
+              );
             })}
           {correctChoiceIndex}
         </>

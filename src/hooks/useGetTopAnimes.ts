@@ -6,6 +6,7 @@ interface Character {
 }
 
 export interface AnimeItem {
+  id?: number;
   title: string;
   characters: Array<Character>;
 }
@@ -17,12 +18,12 @@ const useGetTopAnimes = (pagesToFetch: number) => {
     return `
     {
       Page(page:1, perPage:50){
-        media (sort:POPULARITY_DESC){      
+        media (sort:POPULARITY_DESC, isAdult: false){      
           title {
             english
-           	romaji
-            
+           	romaji            
           }
+          id
           characters(sort:FAVOURITES_DESC, perPage: 5){
             nodes{
               name {
@@ -63,6 +64,7 @@ const useGetTopAnimes = (pagesToFetch: number) => {
           const anime: AnimeItem = {
             title: element.title.english || element.title.romaji,
             characters: characterList,
+            id: element.id,
           };
           setResultList((oldArr) => [...oldArr, anime]);
         });
