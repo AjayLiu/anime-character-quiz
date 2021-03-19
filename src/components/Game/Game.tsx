@@ -35,18 +35,22 @@ const Game: React.FC = () => {
       });
 
       //if duplicate
-      if (randomAnimes.includes(correctAnime)) {
-        randomAnimes = [];
-      } else {
-        break;
-      }
+      let foundDupe = false;
+      randomAnimes.forEach((val) => {
+        if (val.id == correctAnime.id) {
+          console.error(randomAnimes);
+          randomAnimes = [];
+          foundDupe = true;
+        }
+      });
+      if (!foundDupe) break;
     }
 
     //insert the correct answer
     const insertSpot = Math.floor(Math.random() * 4);
     randomAnimes.splice(insertSpot, 0, correctAnime);
-    console.log(randomAnimes);
 
+    console.log(randomAnimes);
     setDisplayedChoices(randomAnimes);
     setCorrectChoiceIndex(insertSpot);
   };
