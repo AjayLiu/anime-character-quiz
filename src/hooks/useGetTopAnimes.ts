@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 interface Character {
+  id: number;
   name: string;
   image: string;
 }
@@ -13,11 +14,12 @@ export interface AnimeItem {
 
 const useGetTopAnimes = (pagesToFetch: number) => {
   const [resultList, setResultList] = useState<Array<AnimeItem>>([]);
+  const [isDone, setIsDone] = useState(false);
 
   const queryAnimePage = (page: number) => {
     return `
     {
-      Page(page:1, perPage:50){
+      Page(page:${page}, perPage:50){
         media (sort:POPULARITY_DESC, isAdult: false){      
           title {
             english
@@ -26,6 +28,7 @@ const useGetTopAnimes = (pagesToFetch: number) => {
           id
           characters(sort:FAVOURITES_DESC, perPage: 5){
             nodes{
+              id
               name {
                 full
               }
@@ -52,32 +55,49 @@ const useGetTopAnimes = (pagesToFetch: number) => {
         const { data } = await response.json();
         const arrayOfAnimes = data.Page.media;
         arrayOfAnimes.forEach((element) => {
+          let foundDuplicateCharacter = false;
           const characterList: Array<Character> = element.characters.nodes.map(
             (elem) => {
               const character: Character = {
+                id: elem.id,
                 name: elem.name.full,
                 image: elem.image.medium,
               };
+
+              //CHECK IF CHARACTER ALREADY EXISTS - IF SO, PROBABLY A SEQUEL (dont want sequels, just get one of them to avoid confusion)
+              resultList.forEach((val) => {
+                val.characters.forEach((tempChar) => {
+                  if (tempChar.id == elem.id) {
+                    // console.log("dupe");
+                    foundDuplicateCharacter = true;
+                  }
+                });
+              });
               return character;
             }
           );
-          const anime: AnimeItem = {
-            title: element.title.english || element.title.romaji,
-            characters: characterList,
-            id: element.id,
-          };
-          setResultList((oldArr) => [...oldArr, anime]);
+          if (!foundDuplicateCharacter) {
+            const anime: AnimeItem = {
+              title: element.title.english || element.title.romaji,
+              characters: characterList,
+              id: element.id,
+            };
+            setResultList((oldArr) => [...oldArr, anime]);
+          }
         });
       } catch (error) {
         console.error(error);
       }
     };
-    for (let i = 1; i <= pagesToFetch; i++) {
-      // setResultList(fetchAnimePage(i));
-      fetchAnimePage(i);
-    }
+    const fetchAllPages = async () => {
+      for (let i = 1; i <= pagesToFetch; i++) {
+        await fetchAnimePage(i);
+      }
+      setIsDone(true);
+    };
+    fetchAllPages();
   }, []);
 
-  return resultList;
+  return { results: resultList, isDone: isDone };
 };
 export default useGetTopAnimes;
