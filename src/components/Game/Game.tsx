@@ -20,6 +20,7 @@ const Game: React.FC = () => {
 
   const randomizeChoices = () => {
     setWrongChoices(shuffle(shuffle.pick(animeList, { picks: 3 })));
+    setCharacterIndex(rng(5));
     setWrongChoiceDone(false);
   };
 
@@ -101,9 +102,18 @@ const Game: React.FC = () => {
     if (doneShuffling) randomizeChoices();
   }, [playerIndex]);
 
+  const [correctIndicator, setCorrectIndicator] = useState<string>();
+  const onChoose = (chosenIndex: number) => {
+    if (chosenIndex === correctChoiceIndex) {
+      setCorrectIndicator("CORRECT");
+    } else {
+      setCorrectIndicator("INCORRECT, the answer was: " + correctAnime.title);
+    }
+    nextCharacter();
+  };
+
   return (
     <div>
-      <img src="img/logo.svg" alt="logo" width={100} />
       {!correctCharacter ? (
         <p>Loading the top {fetchingList.length} animes...</p>
       ) : (
@@ -114,21 +124,16 @@ const Game: React.FC = () => {
             displayedChoices.map((item, idx) => {
               return (
                 <div key={idx}>
-                  <div>{item.title}</div>
+                  <button onClick={() => onChoose(idx)}>{item.title}</button>
                 </div>
               );
             })}
+          {correctIndicator}
           <br></br>
-          {correctChoiceIndex}
-          {correctCharacter.name}
+          {/* {correctChoiceIndex}
+          {correctCharacter.name} */}
         </>
       )}
-      <button
-        style={{ position: "absolute", bottom: "0px", left: "0px" }}
-        onClick={() => nextCharacter()}
-      >
-        Next
-      </button>
       <p>{playerIndex}</p>
     </div>
   );
