@@ -5,7 +5,7 @@ const Game: React.FC = () => {
   const rng = (max: number) => {
     return Math.floor(Math.random() * max);
   };
-  const PAGES_TO_GET = 4;
+  const PAGES_TO_GET = 1;
   const [playerIndex, setPlayerIndex] = useState(0);
   const [animeList, setAnimeList] = useState<AnimeItem[]>();
   const correctAnime = animeList && animeList[playerIndex];
@@ -18,6 +18,10 @@ const Game: React.FC = () => {
   const [wrongChoices, setWrongChoices] = useState<AnimeItem[]>();
   const [wrongChoiceDone, setWrongChoiceDone] = useState(false);
 
+  const [charactersAlreadySeen, setCharactersAlreadySeen] = useState<number[]>(
+    []
+  );
+
   const randomizeChoices = () => {
     setWrongChoices(shuffle(shuffle.pick(animeList, { picks: 3 })));
     setCharacterIndex(rng(5));
@@ -26,6 +30,11 @@ const Game: React.FC = () => {
 
   const stringSimilarity = require("string-similarity");
   useEffect(() => {
+    // prevent repeating seen characters
+    const answerIsDupe = () => {
+      return charactersAlreadySeen.includes(correctCharacter.id);
+    };
+
     // if the anime name is too similar to the real answer, probably a sequel - mark it as a duplicate to prevent confusion
     // there should be no animes that contain the correct character (prevent ambiguity among answers)
     const containsDupes = (animes: AnimeItem[]) => {
@@ -51,7 +60,7 @@ const Game: React.FC = () => {
     };
     if (wrongChoices) {
       if (!wrongChoiceDone) {
-        if (containsDupes(wrongChoices)) {
+        if (containsDupes(wrongChoices) || answerIsDupe()) {
           randomizeChoices();
           console.warn("dupe problem");
         } else {
@@ -62,6 +71,11 @@ const Game: React.FC = () => {
           setCorrectChoiceIndex(correctIndex);
           setWrongChoiceDone(true);
           setDisplayedChoices(wrongChoices);
+
+          setCharactersAlreadySeen([
+            ...charactersAlreadySeen,
+            correctCharacter.id,
+          ]);
         }
       }
     }
