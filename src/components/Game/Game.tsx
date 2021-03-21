@@ -2,114 +2,113 @@ import React, { useEffect, useState } from "react";
 import useGetTopAnimes, { AnimeItem } from "@hooks/useGetTopAnimes";
 import shuffle from "shuffle-array";
 const Game: React.FC = () => {
-  const PAGES_TO_GET = 5;
-  const [randList, setRandList] = useState<Array<number>>();
-  const [playerIndex, setPlayerIndex] = useState(0);
-  const [characterIndex, setCharacterIndex] = useState<number>(
-    Math.floor(Math.random() * 5)
-  );
-
-  const [displayedChoices, setDisplayedChoices] = useState<Array<AnimeItem>>();
-  const [correctChoiceIndex, setCorrectChoiceIndex] = useState<number>();
-
-  const [doneRandomizing, setDoneRandomizing] = useState(false);
-  const shuffleRandList = () => {
-    //make an array filled from 0 to pagesToGet * 50
-    let tempArr = Array.from(Array(animeList.length).keys());
-    shuffle(tempArr);
-    setRandList(tempArr);
+  const rng = (max: number) => {
+    return Math.floor(Math.random() * max);
   };
+  const PAGES_TO_GET = 4;
+  const [playerIndex, setPlayerIndex] = useState(0);
+  const [animeList, setAnimeList] = useState<AnimeItem[]>();
+  const correctAnime = animeList && animeList[playerIndex];
+  const [correctChoiceIndex, setCorrectChoiceIndex] = useState<number>();
+  const [characterIndex, setCharacterIndex] = useState<number>(() => rng(5));
+  const correctCharacter =
+    correctAnime && correctAnime.characters[characterIndex];
+
+  const [displayedChoices, setDisplayedChoices] = useState<AnimeItem[]>();
+  const [wrongChoices, setWrongChoices] = useState<AnimeItem[]>();
+  const [wrongChoiceDone, setWrongChoiceDone] = useState(false);
 
   const randomizeChoices = () => {
-    let randomAnimes: Array<AnimeItem> = [];
-    const max = PAGES_TO_GET * 50 - 3;
-
-    const correctAnime = animeList[randList[playerIndex]];
-    //keep randomizing to make sure the real answer isnt in the wrong choices
-    let randomIndexes = [];
-    while (true) {
-      const randIndex = Math.floor(Math.random() * max);
-      randomIndexes = randList.slice(randIndex, randIndex + 3);
-      randomIndexes.forEach((val) => {
-        randomAnimes.push(animeList[randList[val]]);
-      });
-
-      const randomAnimeIDs = randomAnimes.map((v) => v.id);
-
-      //if duplicate
-      //check for duplicates among wrong choices
-      const uniqueAnimes = new Set(randomAnimeIDs);
-      if (
-        randomAnimeIDs.includes(correctAnime.id) ||
-        uniqueAnimes.size != randomAnimes.length
-      ) {
-        console.log("DUPE");
-        randomAnimes = [];
-        randomIndexes = [];
-      } else {
-        //check if our target character is in any of the choices (prevent ambiguity)
-        const targetCharacter = correctAnime.characters[characterIndex];
-        let foundAmbiguous = false;
-        randomAnimes.forEach((val) => {
-          val.characters.forEach((thisCharacter) => {
-            if (thisCharacter.id == targetCharacter.id) {
-              console.log("AMBIGUOUS CHARACTERS");
-              foundAmbiguous = true;
-            }
-          });
-        });
-        if (!foundAmbiguous) break;
-      }
-    }
-
-    //insert the correct answer
-    const insertSpot = Math.floor(Math.random() * 4);
-    randomAnimes.splice(insertSpot, 0, correctAnime);
-
-    console.log(randomAnimes);
-    setDisplayedChoices(randomAnimes);
-    setCorrectChoiceIndex(insertSpot);
+    setWrongChoices(shuffle(shuffle.pick(animeList, { picks: 3 })));
+    setWrongChoiceDone(false);
   };
 
+  const stringSimilarity = require("string-similarity");
+  useEffect(() => {
+    // if the anime name is too similar to the real answer, probably a sequel - mark it as a duplicate to prevent confusion
+    // there should be no animes that contain the correct character (prevent ambiguity among answers)
+    const containsDupes = (animes: AnimeItem[]) => {
+      let foundDupe = false;
+      animes.forEach((anime) => {
+        if (anime.id === correctAnime.id) foundDupe = true;
+
+        if (
+          stringSimilarity.compareTwoStrings(anime.title, correctAnime.title) >=
+          0.5
+        )
+          foundDupe = true;
+
+        // console.log(anime.title + ", " + correctAnime.title);
+
+        anime.characters.forEach((character) => {
+          if (character.id === correctCharacter.id) {
+            foundDupe = true;
+          }
+        });
+      });
+      return foundDupe;
+    };
+    if (wrongChoices) {
+      if (!wrongChoiceDone) {
+        if (containsDupes(wrongChoices)) {
+          randomizeChoices();
+          console.warn("dupe problem");
+        } else {
+          // insert the correct answer from 0 to 3
+          const correctIndex = rng(4);
+          const choicesWithAnswerMixedIn = wrongChoices;
+          choicesWithAnswerMixedIn.splice(correctIndex, 0, correctAnime);
+          setCorrectChoiceIndex(correctIndex);
+          setWrongChoiceDone(true);
+          setDisplayedChoices(wrongChoices);
+        }
+      }
+    }
+  }, [wrongChoices]);
+
   const fetchResults = useGetTopAnimes(PAGES_TO_GET);
-  const animeList = fetchResults.results;
+  const fetchingList = fetchResults.results;
   const doneFetching = fetchResults.isDone;
+  const [doneShuffling, setDoneShuffling] = useState(false);
+
+  const shuffleAnimeList = async () => {
+    setAnimeList(shuffle(fetchingList, { copy: true }));
+  };
+
+  // every time animeList updates, if it is different from what is being fetched, we know that it is done shuffling
+  useEffect(() => {
+    if (animeList) {
+      animeList.forEach((val, idx) => {
+        if (fetchingList[idx].id !== val.id) {
+          setDoneShuffling(true);
+          randomizeChoices();
+        }
+      });
+    }
+  }, [animeList]);
 
   useEffect(() => {
-    //done getting all animes
+    // done getting all animes
     if (doneFetching) {
-      shuffleRandList();
+      shuffleAnimeList();
     }
   }, [doneFetching]);
 
-  useEffect(() => {
-    if (randList) {
-      setDoneRandomizing(true);
-    }
-  }, [randList]);
-
-  useEffect(() => {
-    if (doneRandomizing) {
-      randomizeChoices();
-    }
-  }, [doneRandomizing, playerIndex]);
-
   const nextCharacter = () => {
     setPlayerIndex(playerIndex + 1);
-    setCharacterIndex(Math.floor(Math.random() * 5));
   };
+  useEffect(() => {
+    if (doneShuffling) randomizeChoices();
+  }, [playerIndex]);
 
   return (
     <div>
-      {!doneRandomizing ? (
-        <p>Loading the top {animeList.length} animes...</p>
+      <img src="img/logo.svg" alt="logo" width={100} />
+      {!correctCharacter ? (
+        <p>Loading the top {fetchingList.length} animes...</p>
       ) : (
         <>
-          <img
-            src={
-              animeList[randList[playerIndex]].characters[characterIndex].image
-            }
-          ></img>
+          <img src={correctCharacter.image}></img>
           <h2>This character is from...</h2>
           {displayedChoices &&
             displayedChoices.map((item, idx) => {
@@ -119,10 +118,18 @@ const Game: React.FC = () => {
                 </div>
               );
             })}
+          <br></br>
           {correctChoiceIndex}
+          {correctCharacter.name}
         </>
       )}
-      <button onClick={() => nextCharacter()}>Next</button>
+      <button
+        style={{ position: "absolute", bottom: "0px", left: "0px" }}
+        onClick={() => nextCharacter()}
+      >
+        Next
+      </button>
+      <p>{playerIndex}</p>
     </div>
   );
 };

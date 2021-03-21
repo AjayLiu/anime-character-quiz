@@ -33,7 +33,7 @@ const useGetTopAnimes = (pagesToFetch: number) => {
                 full
               }
               image{
-                medium
+                large
               }
             }
           }      
@@ -55,35 +55,24 @@ const useGetTopAnimes = (pagesToFetch: number) => {
         const { data } = await response.json();
         const arrayOfAnimes = data.Page.media;
         arrayOfAnimes.forEach((element) => {
-          let foundDuplicateCharacter = false;
           const characterList: Array<Character> = element.characters.nodes.map(
             (elem) => {
-              const character: Character = {
-                id: elem.id,
-                name: elem.name.full,
-                image: elem.image.medium,
-              };
-
-              //CHECK IF CHARACTER ALREADY EXISTS - IF SO, PROBABLY A SEQUEL (dont want sequels, just get one of them to avoid confusion)
-              resultList.forEach((val) => {
-                val.characters.forEach((tempChar) => {
-                  if (tempChar.id == elem.id) {
-                    // console.log("dupe");
-                    foundDuplicateCharacter = true;
-                  }
-                });
-              });
-              return character;
+              if (elem.image.large != undefined) {
+                const character: Character = {
+                  id: elem.id,
+                  name: elem.name.full,
+                  image: elem.image.large,
+                };
+                return character;
+              }
             }
           );
-          if (!foundDuplicateCharacter) {
-            const anime: AnimeItem = {
-              title: element.title.english || element.title.romaji,
-              characters: characterList,
-              id: element.id,
-            };
-            setResultList((oldArr) => [...oldArr, anime]);
-          }
+          const anime: AnimeItem = {
+            title: element.title.english || element.title.romaji,
+            characters: characterList,
+            id: element.id,
+          };
+          setResultList((oldArr) => [...oldArr, anime]);
         });
       } catch (error) {
         console.error(error);
