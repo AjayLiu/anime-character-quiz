@@ -18,5 +18,6 @@ module.exports = {
     `gatsby-plugin-typescript`,
     `gatsby-plugin-sass`,
     `gatsby-plugin-tsconfig-paths`,
+    `gatsby-plugin-react-head`,
   ],
 };

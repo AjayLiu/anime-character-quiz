@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import useGetTopAnimes, { AnimeItem } from "@hooks/useGetTopAnimes";
 import shuffle from "shuffle-array";
+import { useTimer } from "react-timer-hook";
+
 const Game: React.FC = () => {
   const rng = (max: number) => {
     return Math.floor(Math.random() * max);
   };
-  const PAGES_TO_GET = 1;
+  const PAGES_TO_GET = 5;
   const [playerIndex, setPlayerIndex] = useState(0);
   const [animeList, setAnimeList] = useState<AnimeItem[]>();
   const correctAnime = animeList && animeList[playerIndex];
@@ -106,6 +108,7 @@ const Game: React.FC = () => {
     // done getting all animes
     if (doneFetching) {
       shuffleAnimeList();
+      myTimer.resume();
     }
   }, [doneFetching]);
 
@@ -120,19 +123,62 @@ const Game: React.FC = () => {
   const onChoose = (chosenIndex: number) => {
     if (chosenIndex === correctChoiceIndex) {
       setCorrectIndicator("CORRECT");
+      addTime(3);
     } else {
       setCorrectIndicator("INCORRECT, the answer was: " + correctAnime.title);
     }
     nextCharacter();
   };
 
+  const timesUp = () => {
+    console.warn("time is up");
+    setIsGameOver(true);
+  };
+
+  const addTime = (seconds: number) => {
+    myTimer.restart(
+      new Date().getTime() + myTimer.seconds * 1000 + seconds * 1000
+    );
+  };
+
+  const myTimer = useTimer({
+    expiryTimestamp: new Date().getTime() + 1000 * 30,
+    onExpire: timesUp,
+  });
+
+  const resetTimer = () => {
+    myTimer.restart(new Date().getTime() + 1000 * 30);
+  };
+
+  useEffect(() => {
+    myTimer.start();
+    myTimer.pause();
+  }, []);
+
+  const [isGameOver, setIsGameOver] = useState(false);
+
+  const resetGame = () => {
+    setIsGameOver(false);
+    resetTimer();
+    setPlayerIndex(0);
+    shuffleAnimeList();
+  };
+
   return (
     <div>
-      {!correctCharacter ? (
+      {isGameOver ? (
+        <div>
+          <div>Game Over</div>
+          <button onClick={() => resetGame()}>Play Again</button>
+        </div>
+      ) : !correctCharacter ? (
         <p>Loading the top {fetchingList.length} animes...</p>
       ) : (
         <>
           <img src={correctCharacter.image}></img>
+          {myTimer.isRunning
+            ? myTimer.seconds + " seconds remaining"
+            : "Time's up"}
           <h2>This character is from...</h2>
           {displayedChoices &&
             displayedChoices.map((item, idx) => {

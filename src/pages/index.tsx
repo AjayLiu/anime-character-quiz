@@ -1,15 +1,19 @@
 import Game from "@components/Game/Game";
+import Logo from "@components/Logo/Logo";
+
 import React from "react";
+import { Title } from "react-head";
 
 const Home: React.FC = () => {
   return (
-    <div>
-      <head>
-        <title>Anime Character Quiz</title>
-      </head>
-      <img src="/img/logo.svg" alt="logo" width={100} />
-      <Game />
-    </div>
+    <>
+      <Title>Anime Character Quiz</Title>
+
+      <div>
+        <Logo />
+        <Game />
+      </div>
+    </>
   );
 };
 
