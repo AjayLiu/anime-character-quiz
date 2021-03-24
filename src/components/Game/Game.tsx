@@ -36,7 +36,9 @@ const Game: React.FC = () => {
     const answerIsDupe = () => {
       return charactersAlreadySeen.includes(correctCharacter.id);
     };
-
+    const containsBannedCharacters = () => {
+      return correctCharacter.id === 36309; // character id for Narrator
+    };
     // if the anime name is too similar to the real answer, probably a sequel - mark it as a duplicate to prevent confusion
     // there should be no animes that contain the correct character (prevent ambiguity among answers)
     const containsDupes = (animes: AnimeItem[]) => {
@@ -62,7 +64,11 @@ const Game: React.FC = () => {
     };
     if (wrongChoices) {
       if (!wrongChoiceDone) {
-        if (containsDupes(wrongChoices) || answerIsDupe()) {
+        if (
+          containsDupes(wrongChoices) ||
+          answerIsDupe() ||
+          containsBannedCharacters()
+        ) {
           randomizeChoices();
           console.warn("dupe problem");
         } else {
