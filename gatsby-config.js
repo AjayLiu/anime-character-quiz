@@ -19,5 +19,6 @@ module.exports = {
     `gatsby-plugin-tsconfig-paths`,
     `gatsby-plugin-react-head`,
     `gatsby-plugin-sass`,
+    `gatsby-plugin-react-helmet`,
   ],
 };
