@@ -1,4 +1,30 @@
 .container {
-  margin: auto;
+  margin: 50px auto;
   width: fit-content;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  .characterImage {
+    max-width: 200px;
+  }
+
+  .score,
+  .timeRemaining,
+  .label {
+    margin: 10px auto;
+  }
+
+  .label {
+    font-size: larger;
+  }
+
+  .button {
+    background: transparent;
+    border: 1px solid white;
+    color: white;
+    padding: 5px 8px;
+    margin: 2px;
+  }
 }

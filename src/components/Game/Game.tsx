@@ -129,7 +129,10 @@ const Game: React.FC = () => {
   const [correctIndicator, setCorrectIndicator] = useState<string>();
   const onChoose = (chosenIndex: number) => {
     if (chosenIndex === correctChoiceIndex) {
-      setCorrectIndicator("CORRECT");
+      setCorrectIndicator("CORRECT!");
+      setTimeout(() => {
+        setCorrectIndicator("");
+      }, 2000);
       addTime(3);
       nextCharacter();
     } else {
@@ -181,29 +184,43 @@ const Game: React.FC = () => {
       {isGameOver ? (
         <div>
           <div>Game Over</div>
+          <div>
+            That character was {correctCharacter.name} from {correctAnime.title}
+          </div>
           <p>Your Score: {playerIndex}</p>
-          <button onClick={() => resetGame()}>Play Again</button>
+          <button className={styles.button} onClick={() => resetGame()}>
+            Play Again
+          </button>
         </div>
       ) : !correctCharacter ? (
         <p>Loading the top {fetchingList.length} animes...</p>
       ) : (
         <>
-          <img src={correctCharacter.image}></img>
-          <div>
+          <img
+            className={styles.characterImage}
+            src={correctCharacter.image}
+          ></img>
+          <div className={styles.score}>Your Score: {playerIndex}</div>
+          <div className={styles.timeRemaining}>
             {myTimer.isRunning
               ? myTimer.seconds + " seconds remaining"
               : "Time's up"}
           </div>
-          <p>Your Score: {playerIndex}</p>
-          <h2>This character is from...</h2>
+          <div className={styles.label}>This character is from...</div>
           {displayedChoices &&
             displayedChoices.map((item, idx) => {
               return (
                 <div key={idx}>
-                  <button onClick={() => onChoose(idx)}>{item.title}</button>
+                  <button
+                    className={styles.button}
+                    onClick={() => onChoose(idx)}
+                  >
+                    {item.title}
+                  </button>
                 </div>
               );
             })}
+          {correctIndicator}
           {/* {correctChoiceIndex}
           {correctCharacter.name} */}
         </>
