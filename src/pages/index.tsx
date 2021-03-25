@@ -30,7 +30,7 @@ const Home: React.FC = () => {
         />
         <meta
           property="og:image"
-          content="https://anime-character-quiz.netlify.app/img/logo.svg"
+          content="https://anime-character-quiz.netlify.app/img/logo.png"
         />
         <meta
           property="og:description"
