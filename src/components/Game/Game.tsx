@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import useGetTopAnimes, { AnimeItem } from "@hooks/useGetTopAnimes";
 import shuffle from "shuffle-array";
 import { useTimer } from "react-timer-hook";
+import * as styles from "./Game.module.scss";
 
 const Game: React.FC = () => {
   const rng = (max: number) => {
@@ -130,15 +131,19 @@ const Game: React.FC = () => {
     if (chosenIndex === correctChoiceIndex) {
       setCorrectIndicator("CORRECT");
       addTime(3);
+      nextCharacter();
     } else {
+      gameOver();
       setCorrectIndicator("INCORRECT, the answer was: " + correctAnime.title);
     }
-    nextCharacter();
+  };
+
+  const gameOver = () => {
+    setIsGameOver(true);
   };
 
   const timesUp = () => {
-    console.warn("time is up");
-    setIsGameOver(true);
+    gameOver();
   };
 
   const addTime = (seconds: number) => {
@@ -168,13 +173,15 @@ const Game: React.FC = () => {
     resetTimer();
     setPlayerIndex(0);
     shuffleAnimeList();
+    setCorrectIndicator("");
   };
 
   return (
-    <div>
+    <div className={styles.container}>
       {isGameOver ? (
         <div>
           <div>Game Over</div>
+          <p>Your Score: {playerIndex}</p>
           <button onClick={() => resetGame()}>Play Again</button>
         </div>
       ) : !correctCharacter ? (
@@ -182,9 +189,12 @@ const Game: React.FC = () => {
       ) : (
         <>
           <img src={correctCharacter.image}></img>
-          {myTimer.isRunning
-            ? myTimer.seconds + " seconds remaining"
-            : "Time's up"}
+          <div>
+            {myTimer.isRunning
+              ? myTimer.seconds + " seconds remaining"
+              : "Time's up"}
+          </div>
+          <p>Your Score: {playerIndex}</p>
           <h2>This character is from...</h2>
           {displayedChoices &&
             displayedChoices.map((item, idx) => {
@@ -194,13 +204,10 @@ const Game: React.FC = () => {
                 </div>
               );
             })}
-          {correctIndicator}
-          <br></br>
           {/* {correctChoiceIndex}
           {correctCharacter.name} */}
         </>
       )}
-      <p>{playerIndex}</p>
     </div>
   );
 };

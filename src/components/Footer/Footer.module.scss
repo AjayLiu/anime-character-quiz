@@ -1,0 +1,21 @@
+.footer {
+  background-color: #23262f;
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  width: 100%;
+  margin: auto;
+  padding-top: 20px;
+  margin-top: 200px;
+}
+#socialLinks {
+  img {
+    margin: 0 20px;
+    width: 50px;
+  }
+}
+
+a {
+  color: white;
+  text-decoration: none;
+}

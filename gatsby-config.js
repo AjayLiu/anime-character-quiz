@@ -16,8 +16,8 @@ module.exports = {
     },
     // Add typescript stack into webpack
     `gatsby-plugin-typescript`,
-    `gatsby-plugin-sass`,
     `gatsby-plugin-tsconfig-paths`,
     `gatsby-plugin-react-head`,
+    `gatsby-plugin-sass`,
   ],
 };

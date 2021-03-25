@@ -1,0 +1,17 @@
+.container {
+  width: 90%;
+  max-width: 200px;
+  display: flex;
+  margin: auto;
+
+  .image {
+    width: 50%;
+  }
+  .title {
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    font-size: larger;
+  }
+}
