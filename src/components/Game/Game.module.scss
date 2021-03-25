@@ -5,6 +5,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  text-align: center;
 
   .characterImage {
     max-width: 200px;
@@ -18,6 +19,7 @@
 
   .label {
     font-size: larger;
+    font-weight: bold;
   }
 
   .button {

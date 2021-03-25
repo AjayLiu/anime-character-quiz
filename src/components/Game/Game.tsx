@@ -132,7 +132,7 @@ const Game: React.FC = () => {
     document.activeElement.blur();
 
     if (chosenIndex === correctChoiceIndex) {
-      setCorrectIndicator("CORRECT!");
+      setCorrectIndicator("CORRECT! + 3 seconds");
       setTimeout(() => {
         setCorrectIndicator("");
       }, 2000);
@@ -186,9 +186,10 @@ const Game: React.FC = () => {
     <div className={styles.container}>
       {isGameOver ? (
         <div>
-          <div>Game Over</div>
+          <div className={styles.label}>Game Over!</div>
           <div>
-            That character was {correctCharacter.name} from {correctAnime.title}
+            That character was <strong>{correctCharacter.name}</strong> from{" "}
+            <strong>{correctAnime.title}</strong>
           </div>
           <p>Your Score: {playerIndex}</p>
           <button className={styles.button} onClick={() => resetGame()}>
