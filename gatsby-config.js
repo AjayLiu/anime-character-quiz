@@ -20,5 +20,13 @@ module.exports = {
     `gatsby-plugin-react-head`,
     `gatsby-plugin-sass`,
     `gatsby-plugin-react-helmet`,
+    {
+      resolve: `gatsby-plugin-gtag`,
+      options: {
+        // You can add multiple tracking ids and a pageview event will be fired for all of them.
+        trackingId: "UA-178410803-9", // Google Analytics / GA
+        head: true,
+      },
+    },
   ],
 };
