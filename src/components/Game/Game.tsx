@@ -128,6 +128,9 @@ const Game: React.FC = () => {
 
   const [correctIndicator, setCorrectIndicator] = useState<string>();
   const onChoose = (chosenIndex: number) => {
+    // @ts-ignore
+    document.activeElement.blur();
+
     if (chosenIndex === correctChoiceIndex) {
       setCorrectIndicator("CORRECT!");
       setTimeout(() => {
