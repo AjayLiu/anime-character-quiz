@@ -17,7 +17,11 @@
     "baseUrl": "./",
     "paths": {
       "@components/*": ["src/components/*"],
-      "@hooks/*": ["src/hooks/*"]
+      "@hooks/*": ["src/hooks/*"],
+      "@styles/*": ["src/styles/*"]
+    },
+    "stylePreprocessorOptions": {
+      "includePaths": ["src/styles/*"]
     }
   },
   "include": ["**/*.ts", "**/*.tsx"],

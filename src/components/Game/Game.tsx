@@ -132,16 +132,27 @@ const Game: React.FC = () => {
     document.activeElement.blur();
 
     if (chosenIndex === correctChoiceIndex) {
-      setCorrectIndicator("CORRECT! + 3 seconds");
-      setTimeout(() => {
-        setCorrectIndicator("");
-      }, 2000);
       addTime(3);
+      showCorrectIndicator();
       nextCharacter();
     } else {
       gameOver();
       setCorrectIndicator("INCORRECT, the answer was: " + correctAnime.title);
     }
+  };
+
+  const [numTimeouts, setNumTimeouts] = useState(0);
+  const showCorrectIndicator = () => {
+    setCorrectIndicator("CORRECT! + 3 seconds");
+    setNumTimeouts(numTimeouts + 1);
+    // hide after 2 seconds (but account for the case when the player gets multiple correct within 2 seconds)
+    setTimeout(() => {
+      console.log(numTimeouts);
+      if (numTimeouts === 1) {
+        setCorrectIndicator("");
+      }
+      setNumTimeouts(numTimeouts - 1);
+    }, 2000);
   };
 
   const gameOver = () => {
@@ -152,19 +163,22 @@ const Game: React.FC = () => {
     gameOver();
   };
 
-  const addTime = (seconds: number) => {
+  const STARTING_TIME = 30; // in seconds
+
+  const addTime = (secondsToAdd: number) => {
     myTimer.restart(
-      new Date().getTime() + myTimer.seconds * 1000 + seconds * 1000
+      new Date().getTime() + secondsRemaining * 1000 + secondsToAdd * 1000
     );
   };
 
   const myTimer = useTimer({
-    expiryTimestamp: new Date().getTime() + 1000 * 30,
+    expiryTimestamp: new Date().getTime() + 1000 * STARTING_TIME,
     onExpire: timesUp,
   });
+  const secondsRemaining = myTimer.minutes * 60 + myTimer.seconds;
 
   const resetTimer = () => {
-    myTimer.restart(new Date().getTime() + 1000 * 30);
+    myTimer.restart(new Date().getTime() + 1000 * STARTING_TIME);
   };
 
   useEffect(() => {
@@ -182,6 +196,10 @@ const Game: React.FC = () => {
     setCorrectIndicator("");
   };
 
+  const isPlural = (num: number) => {
+    return num !== 1;
+  };
+
   return (
     <div className={styles.container}>
       {isGameOver ? (
@@ -191,7 +209,7 @@ const Game: React.FC = () => {
             className={styles.characterImage}
             src={correctCharacter.image}
           ></img>
-          <div>
+          <div className={styles.revealAnswer}>
             This character is <strong>{correctCharacter.name}</strong> from{" "}
             <strong>{correctAnime.title}</strong>
           </div>
@@ -203,7 +221,10 @@ const Game: React.FC = () => {
       ) : !correctCharacter ? (
         <>
           <strong>Please wait...</strong>
-          <p>Loading the top {fetchingList.length} animes...</p>
+          <p>
+            Loading the top {fetchingList.length} / {PAGES_TO_GET * 50}{" "}
+            animes...
+          </p>
         </>
       ) : (
         <>
@@ -212,26 +233,36 @@ const Game: React.FC = () => {
             src={correctCharacter.image}
           ></img>
           <div className={styles.score}>Your Score: {playerIndex}</div>
-          <div className={styles.timeRemaining}>
+          <div
+            className={styles.timeRemaining}
+            style={{ color: secondsRemaining < 10 && "red" }}
+          >
             {myTimer.isRunning
-              ? myTimer.seconds + " seconds remaining"
+              ? (myTimer.minutes > 0
+                  ? myTimer.minutes +
+                    (isPlural(myTimer.minutes) ? " minutes " : " minute ")
+                  : "") +
+                (myTimer.seconds +
+                  (isPlural(myTimer.seconds) ? " seconds " : " second ") +
+                  "remaining")
               : "Time's up"}
           </div>
           <div className={styles.label}>This character is from...</div>
-          {displayedChoices &&
-            displayedChoices.map((item, idx) => {
-              return (
-                <div key={idx}>
+          <div className={styles.buttonContainer}>
+            {displayedChoices &&
+              displayedChoices.map((item, idx) => {
+                return (
                   <button
+                    key={idx}
                     className={styles.button}
                     onClick={() => onChoose(idx)}
                   >
                     {item.title}
                   </button>
-                </div>
-              );
-            })}
-          <div style={{ color: "lime" }}>{correctIndicator}</div>
+                );
+              })}
+          </div>
+          <div className={styles.correctIndicator}>{correctIndicator}</div>
           {/* {correctChoiceIndex}
           {correctCharacter.name} */}
         </>

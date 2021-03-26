@@ -1,5 +1,7 @@
+@import "../../styles/mixins";
+
 .container {
-  margin: 50px auto;
+  margin: 20px auto;
   width: fit-content;
   display: flex;
   flex-direction: column;
@@ -17,16 +19,47 @@
     margin: 10px auto;
   }
 
+  .correctIndicator {
+    color: lime;
+  }
+
   .label {
     font-size: larger;
     font-weight: bold;
   }
 
-  .button {
-    background: transparent;
-    border: 1px solid white;
-    color: white;
-    padding: 5px 8px;
-    margin: 2px;
+  .buttonContainer {
+    display: grid;
+    grid-template-rows: 80px 80px;
+    grid-template-columns: 400px 400px;
+    @include mobile {
+      display: flex;
+      flex-direction: column;
+      width: 80%;
+    }
+
+    .button {
+      cursor: pointer;
+      background: transparent;
+      border: 1px solid white;
+      color: white;
+      padding: 5px 8px;
+      margin: 2px;
+      font-size: larger;
+
+      @include mobile {
+        font-size: medium;
+        padding: 8px 16px;
+      }
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  .revealAnswer {
+    width: 95%;
+    margin: auto;
   }
 }
