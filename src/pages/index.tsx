@@ -6,6 +6,7 @@ import React from "react";
 import { Helmet } from "react-helmet";
 
 import Footer from "@components/Footer/Footer";
+import About from "@components/About/About";
 
 const Home: React.FC = () => {
   return (
@@ -41,7 +42,9 @@ const Home: React.FC = () => {
       <div style={{ minHeight: "90vh" }}>
         <Logo />
         <Game />
+        <About />
       </div>
+
       <Footer />
     </Layout>
   );

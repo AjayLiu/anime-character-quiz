@@ -187,8 +187,12 @@ const Game: React.FC = () => {
       {isGameOver ? (
         <div>
           <div className={styles.label}>Game Over!</div>
+          <img
+            className={styles.characterImage}
+            src={correctCharacter.image}
+          ></img>
           <div>
-            That character was <strong>{correctCharacter.name}</strong> from{" "}
+            This character is <strong>{correctCharacter.name}</strong> from{" "}
             <strong>{correctAnime.title}</strong>
           </div>
           <p>Your Score: {playerIndex}</p>
@@ -197,7 +201,10 @@ const Game: React.FC = () => {
           </button>
         </div>
       ) : !correctCharacter ? (
-        <p>Loading the top {fetchingList.length} animes...</p>
+        <>
+          <strong>Please wait...</strong>
+          <p>Loading the top {fetchingList.length} animes...</p>
+        </>
       ) : (
         <>
           <img
@@ -224,7 +231,7 @@ const Game: React.FC = () => {
                 </div>
               );
             })}
-          {correctIndicator}
+          <div style={{ color: "lime" }}>{correctIndicator}</div>
           {/* {correctChoiceIndex}
           {correctCharacter.name} */}
         </>
