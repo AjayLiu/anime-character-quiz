@@ -147,7 +147,7 @@ const Game: React.FC = () => {
     setNumTimeouts(numTimeouts + 1);
     // hide after 2 seconds (but account for the case when the player gets multiple correct within 2 seconds)
     setTimeout(() => {
-      console.log(numTimeouts);
+      // console.log(numTimeouts);
       if (numTimeouts === 1) {
         setCorrectIndicator("");
       }
