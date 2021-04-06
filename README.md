@@ -1,5 +1,7 @@
 # anime-character-quiz 
 
+![screenshot](preview.png)
+
 Built using Gatsby, Anilist GraphQL, Typescript
 
 [Visit now](https://anime-character-quiz.netlify.app)
