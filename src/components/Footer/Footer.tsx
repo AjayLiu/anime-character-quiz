@@ -1,7 +1,8 @@
 import React from "react";
 import * as styles from "./Footer.module.scss";
+
 const Footer: React.FC = () => {
-  const imgPath = "https://ajayliu.com/imgs";
+  const imgPath = "https://ajayliu.com/img";
   return (
     <>
       <footer className={styles.footer}>
