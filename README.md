@@ -29,6 +29,7 @@
         <li><a href="#prerequisites">Prerequisites</a></li>
         <li><a href="#installation">Installation</a></li>
         <li><a href="#development">Development</a></li>
+        <li><a href="#deployment">Deployment</a></li>
       </ul>
     </li>
     <li><a href="#license">License</a></li>
@@ -74,7 +75,6 @@ Here is a guide if you want to clone my website and modify it for yourself, all 
    ```sh
    yarn
    ```
-3. Publish the site on Netlify using continuous git integration. :tada:
 
 ### Development
 
@@ -82,6 +82,9 @@ To run the development server
    ```sh
    yarn dev
    ```
+   
+### Deployment
+1. Publish the site on Netlify using continuous git integration. :tada:
 
 <!-- LICENSE -->
 ## License
@@ -100,4 +103,5 @@ Project Link: [https://github.com/AjayLiu/anime-character-quiz](https://github.c
 
 <!-- ACKNOWLEDGEMENTS -->
 ## Acknowledgements
+* [string-similarity](https://www.npmjs.com/package/string-similarity)
 * [Netlify](https://www.netlify.com/)
