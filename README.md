@@ -103,5 +103,6 @@ Project Link: [https://github.com/AjayLiu/anime-character-quiz](https://github.c
 
 <!-- ACKNOWLEDGEMENTS -->
 ## Acknowledgements
+* [Anilist API](https://anilist.gitbook.io/anilist-apiv2-docs/)
 * [string-similarity](https://www.npmjs.com/package/string-similarity)
 * [Netlify](https://www.netlify.com/)
