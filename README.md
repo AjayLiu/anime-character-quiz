@@ -82,6 +82,7 @@ To run the development server
    ```sh
    yarn dev
    ```
+   then head over to localhost:8000.
    
 ### Deployment
 1. Publish the site on Netlify using continuous git integration. :tada:
