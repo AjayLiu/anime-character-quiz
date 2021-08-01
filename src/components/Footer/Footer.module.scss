@@ -7,7 +7,21 @@
   margin: auto;
   padding-top: 20px;
   margin-top: 200px;
-  text-align: center;
+
+  .repo {
+    height: 60px;
+    margin-bottom: 30px;
+    .repoAnchor {
+      display: flex;
+      align-items: center;
+      height: 100%;
+      img {
+        height: 100%;
+        margin-right: 10px;
+      }
+      font-size: large;
+    }
+  }
 }
 #socialLinks {
   img {

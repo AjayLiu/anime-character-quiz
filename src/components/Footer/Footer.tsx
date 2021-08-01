@@ -3,6 +3,7 @@ import * as styles from "./Footer.module.scss";
 
 const Footer: React.FC = () => {
   const imgPath = "https://ajayliu.com/img";
+  const projectRepoLink = "https://github.com/AjayLiu/anime-character-quiz";
   return (
     <>
       <footer className={styles.footer}>
@@ -13,7 +14,6 @@ const Footer: React.FC = () => {
             contact@ajayliu.com
           </a>
         </p>
-
         <div id={styles.socialLinks}>
           <a href="https://ajayliu.com">
             <img src={imgPath + "/web_icon.svg"} alt="website logo" />
@@ -26,6 +26,12 @@ const Footer: React.FC = () => {
           </a>
           <a href="https://www.youtube.com/channel/UClr6XCaguPeM0g7UL6Lvs3g">
             <img src={imgPath + "/youtube.svg"} alt="youtube logo" />
+          </a>
+        </div>
+        <div className={styles.repo}>
+          <a href={projectRepoLink} className={styles.repoAnchor}>
+            <img src={imgPath + "/repo.svg"} />
+            View this project on Github
           </a>
         </div>
       </footer>
